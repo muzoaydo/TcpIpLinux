@@ -12,10 +12,6 @@
 #define PORT 8080
 #define SA struct sockaddr
    
-void goo(void)
-{
-    printf("test");
-}
 // Function designed for chat between client and server.
 void func(int connfd)
 {
@@ -45,11 +41,7 @@ void func(int connfd)
         }
     }
 }
-   
-int goo2(void)
-{
-    printf("testtt");
-}
+
 // Driver function
 int main(int argc, char *argv[])
 {
