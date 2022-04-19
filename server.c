@@ -40,8 +40,16 @@ void func(int connfd)
 }
    
 // Driver function
-int main()
+int main(int argc, char *argv[])
 {
+    if (argc < 2)
+    {
+        fprintf(stderr, "ERROR, no port provided\n");
+        exit(1);
+    }
+
+    int portNum = atoi(argv[1]);
+
     int sockfd, connfd, len;
     struct sockaddr_in servaddr, cli;
    
@@ -58,7 +66,7 @@ int main()
     // assign IP, PORT
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port = htons(PORT);
+    servaddr.sin_port = htons(portNum);
    
     // Binding newly created socket to given IP and verification
     if ((bind(sockfd, (SA*)&servaddr, sizeof(servaddr))) != 0) {
@@ -74,7 +82,7 @@ int main()
         exit(0);
     }
     else
-        printf("Server listening..\n");
+        printf("Server listening.. on port: servaddr.sin_port: %d sockfd: %d\n", servaddr.sin_port, sockfd);
     len = sizeof(cli);
    
     // Accept the data packet from client and verification

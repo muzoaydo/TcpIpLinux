@@ -3,6 +3,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <arpa/inet.h>
 #define MAX 80
 #define PORT 8080
 #define SA struct sockaddr
@@ -27,8 +32,15 @@ void func(int sockfd)
     }
 }
    
-int main()
+int main(int argc, char *argv[])
 {
+    if (argc < 3) {
+       fprintf(stderr,"usage %s hostname port\n", argv[0]);
+       exit(0);
+    }
+    int portNum = atoi(argv[2]);
+    printf("Port: %d, 2: %s", portNum, argv[2]);
+
     int sockfd, connfd;
     struct sockaddr_in servaddr, cli;
    
@@ -44,8 +56,10 @@ int main()
    
     // assign IP, PORT
     servaddr.sin_family = AF_INET;
-    servaddr.sin_addr.s_addr = inet_addr("192.168.1.101");
-    servaddr.sin_port = htons(PORT);
+    servaddr.sin_addr.s_addr = inet_addr(argv[1]);
+    servaddr.sin_port = htons(portNum);
+
+    printf("servaddr port: %d", servaddr.sin_port );
    
     // connect the client socket to server socket
     if (connect(sockfd, (SA*)&servaddr, sizeof(servaddr)) != 0) {
