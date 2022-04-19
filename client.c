@@ -6,7 +6,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <netinet/in.h>
-#include <netdb.h>
 #include <arpa/inet.h>
 #define MAX 80
 #define PORT 8080
