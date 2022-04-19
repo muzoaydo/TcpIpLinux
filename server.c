@@ -42,6 +42,10 @@ void func(int connfd)
     }
 }
    
+int goo2(void)
+{
+    printf("testtt");
+}
 // Driver function
 int main(int argc, char *argv[])
 {
