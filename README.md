@@ -1,6 +1,9 @@
 # TcpIpLinux
 ## A TCP-IP messager which has a client and a server that could connect each other. It can send and recieve messages async and also can accept a new client and kill the other.
 
+This program have evolved to something much bigger which can test specific TCP/IP hardware via XML messages. And also i have developed a .Net GUI to control messages via JSON formatted name value pairs. I am not allowed to share that code but you can always reach out if you need help of making something better out of this code.
+
+You can reach out vie E-Mail: muzafferaydogan2020@gmail.com
 
 In order to use the app, you should open up two terminals either from same or different computers. After that you should use;
 ```
