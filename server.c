@@ -30,6 +30,26 @@ int is_connected(int socket)
     }
 
 }
+int logMsg(char* time, char *message, char *sender)
+{
+    FILE *logFile;
+    char *logMsg;
+    // strcpy(logMsg, message);
+    
+    logFile  = fopen ("messages.log", "a");
+    fprintf(logFile, "%s %s %s \n", time, sender , message); 
+    fclose(logFile);
+}
+
+char* getTime()
+{
+    time_t rawtime;
+    struct tm * timeinfo;
+
+    time ( &rawtime );
+    timeinfo = localtime ( &rawtime );
+    return asctime (timeinfo);
+}
 
 void *writeFunc(void *sockfd)
 {
@@ -47,9 +67,18 @@ void *writeFunc(void *sockfd)
         printf("Enter the string : \n -->");
         n = 0;
         // while ((outBuff[n++] = getchar()) != '\n');
-        scanf("%s", outBuff);
-        printf("getchar passed.\n");
-        write(socket, outBuff, buffSize);
+        while ((outBuff[n++] = getchar()) != '\n');
+        int success = write(socket, outBuff, buffSize);
+        if (success != -1)
+        {
+            char *sender = "Server:";
+            char *time = getTime();
+            logMsg(time, outBuff, sender);
+        }
+        else
+        {
+            printf("Couldn't send message");
+        }
         pthread_exit(0);
     // }
 }
@@ -73,6 +102,11 @@ void *readFunc(void *sockfd)
         
         printf("From Client : %s \n", inpBuff);
 
+        char *sender = "Client:";
+        char *time = getTime();
+        logMsg(time, inpBuff, sender);
+
+
         if ((strncmp(inpBuff, "exit", 4)) == 0 || is_connected(socket) != 0) {
             printf("Client Exited.\n");
             pthread_exit(0);
@@ -84,67 +118,6 @@ void *readFunc(void *sockfd)
     return(0);
 }
 
-// void *menu (void *nulling)
-// {
-//     int retWrite;
-//     while (true)
-//     {
-
-//         switch (input)
-//         {
-//             case 0:
-//                 printf("1 - Send a message, 9 - Exit");
-//                 scanf("%d", &input);
-
-//             case 1:
-//                 retWrite = pthread_create(&th_write, NULL, writeFunc, (void *) &sockfd);
-//                 input = 0;
-            
-//             case 9:
-//             {
-//                 pthread_exit(0);
-//             }
-
-        
-//         default:
-//             printf("1 - Send a message, 9 - Exit");
-//             scanf("%d", &input);
-
-//         }
-
-//     }
-
-// }
-   
-// Function designed for chat between client and server.
-// void func(int connfd)
-// {
-//     char buff[BUFFSIZE];
-//     int n;
-//     infinite loop for chat
-//     for (;;) {
-//         bzero(buff, BUFFSIZE);
-   
-//         read the message from client and copy it in buffer
-//         read(connfd, buff, sizeof(buff));
-//         print buffer which contains the client contents
-//         printf("From client: %s\t To client : ", buff);
-//         bzero(buff, BUFFSIZE);
-//         n = 0;
-//         copy server message in the buffer
-//         while ((buff[n++] = getchar()) != '\n')
-//             ;
-   
-//          and send that buffer to client
-//         write(connfd, buff, sizeof(buff));
-   
-//          if msg contains "Exit" then server exit and chat ended.
-//         if (strncmp("exit", buff, 4) == 0) {
-//             printf("Server Exit...\n");
-//             break;
-//         }
-//     }
-// }
 
 // Driver function
 int main(int argc, char *argv[])
@@ -200,6 +173,7 @@ int main(int argc, char *argv[])
     }
     else
         printf("server accept the client...\n");
+
 // while (is_connected(connfd) == 0)
 //     {
 //         sleep(1);

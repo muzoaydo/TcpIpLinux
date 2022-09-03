@@ -9,6 +9,8 @@
 #include <arpa/inet.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include <time.h>
+
 
 #define BUFFSIZE 80
 #define PORT 8080
@@ -33,6 +35,8 @@ int is_connected(int socket)
 
 }
 
+
+
 void *writeFunc(void *sockfd)
 {
     int *sfd = (int *) sockfd; 
@@ -40,17 +44,18 @@ void *writeFunc(void *sockfd)
     char outBuff[BUFFSIZE];
     int n;
     size_t buffSize = sizeof(outBuff);
+
     printf("Write thread initialized. Type exit for menu\n");
 
     while(outBuff !="exit")
     {
         bzero(outBuff, buffSize);
-        printf("Enter the string : \n");
+        printf("Enter the message : \n");
         n = 0;
         while ((outBuff[n++] = getchar()) != '\n')
             ;
         printf("\n");
-        write(socket, outBuff, buffSize);
+        write(socket, outBuff, buffSize);        
         printf("End of write thread\n");
         pthread_exit(0);
     }
